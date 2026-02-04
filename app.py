@@ -25,17 +25,17 @@ IES_CONFIG = {
     'UNIANDRADE': {
         'nome_completo': 'Centro Universitário Campos de Andrade – UNIANDRADE',
         'sigla': 'UNIANDRADE',
-        'logo': 'logos/logo_uni.png'
+        'logo': 'logos/logo uni.png'
     },
     'UNIB': {
         'nome_completo': 'Universidade Ibirapuera - UNIB',
         'sigla': 'UNIB',
-        'logo': 'logos/logo_unib.png'
+        'logo': 'logos/logo unib.png'
     },
     'UNISMG': {
         'nome_completo': 'Centro Universitário Santa Maria da Glória - UNISMG',
         'sigla': 'UNISMG',
-        'logo': 'logos/logo_smg.png'
+        'logo': 'logos/logo smg.png'
     }
 }
 
