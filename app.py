@@ -313,8 +313,11 @@ def criar_zip_termos(df, ies_padrao=None):
         
         progress_bar.empty()
         status_text.empty()
-        
-        return zip_buffer.getvalue(), sucesso, erros
+    
+    # ✅ CORREÇÃO: Resetar ponteiro do buffer para o início
+    zip_buffer.seek(0)
+    
+    return zip_buffer.getvalue(), sucesso, erros
 
 
 def main():
