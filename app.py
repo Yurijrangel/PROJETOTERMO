@@ -350,19 +350,22 @@ def main():
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.image("logos/logo uni.png", use_container_width=True) if os.path.exists("logos/logo uni.png") else None
+        if os.path.exists("logos/logo uni.png"):
+            st.image("logos/logo uni.png", use_container_width=True)
         btn_uniandrade = st.button("🎓 UNIANDRADE", use_container_width=True, type="primary" if st.session_state.get('ies_selecionada') == 'UNIANDRADE' else "secondary")
         if btn_uniandrade:
             st.session_state['ies_selecionada'] = 'UNIANDRADE'
     
     with col2:
-        st.image("logos/logo unib.png", use_container_width=True) if os.path.exists("logos/logo unib.png") else None
+        if os.path.exists("logos/logo unib.png"):
+            st.image("logos/logo unib.png", use_container_width=True)
         btn_unib = st.button("🎓 UNIB", use_container_width=True, type="primary" if st.session_state.get('ies_selecionada') == 'UNIB' else "secondary")
         if btn_unib:
             st.session_state['ies_selecionada'] = 'UNIB'
     
     with col3:
-        st.image("logos/logo smg.png", use_container_width=True) if os.path.exists("logos/logo smg.png") else None
+        if os.path.exists("logos/logo smg.png"):
+            st.image("logos/logo smg.png", use_container_width=True)
         btn_smg = st.button("🎓 UNISMG", use_container_width=True, type="primary" if st.session_state.get('ies_selecionada') == 'UNISMG' else "secondary")
         if btn_smg:
             st.session_state['ies_selecionada'] = 'UNISMG'
