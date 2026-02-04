@@ -346,21 +346,23 @@ def main():
     
     # ====== SELEÇÃO DE IES (ANTES DO UPLOAD) ======
     st.subheader("1️⃣ Selecionar Instituição de Ensino (IES)")
-    st.write("Clique em uma das instituições abaixo:")
+    st.markdown("###")  # Espaçamento
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        # Centralizar logo com espaçamento
+        # Container para centralizar
         if os.path.exists("logos/logo uni.png"):
-            st.image("logos/logo uni.png", width=250)
+            st.image("logos/logo uni.png", use_column_width=True)
         else:
-            st.write("**UNIANDRADE**")
+            st.markdown("<h3 style='text-align: center;'>UNIANDRADE</h3>", unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
         
         # Botão com estilo condicional
         is_selected = st.session_state.get('ies_selecionada') == 'UNIANDRADE'
         btn_uniandrade = st.button(
-            "🎓 UNIANDRADE" if not is_selected else "✅ UNIANDRADE", 
+            "✅ SELECIONADA" if is_selected else "🎓 SELECIONAR", 
             use_container_width=True, 
             type="primary" if is_selected else "secondary",
             key="btn_uniandrade"
@@ -370,16 +372,18 @@ def main():
             st.rerun()
     
     with col2:
-        # Centralizar logo com espaçamento
+        # Container para centralizar
         if os.path.exists("logos/logo unib.png"):
-            st.image("logos/logo unib.png", width=250)
+            st.image("logos/logo unib.png", use_column_width=True)
         else:
-            st.write("**UNIB**")
+            st.markdown("<h3 style='text-align: center;'>UNIB</h3>", unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
         
         # Botão com estilo condicional
         is_selected = st.session_state.get('ies_selecionada') == 'UNIB'
         btn_unib = st.button(
-            "🎓 UNIB" if not is_selected else "✅ UNIB", 
+            "✅ SELECIONADA" if is_selected else "🎓 SELECIONAR", 
             use_container_width=True, 
             type="primary" if is_selected else "secondary",
             key="btn_unib"
@@ -389,16 +393,18 @@ def main():
             st.rerun()
     
     with col3:
-        # Centralizar logo com espaçamento
+        # Container para centralizar
         if os.path.exists("logos/logo smg.png"):
-            st.image("logos/logo smg.png", width=250)
+            st.image("logos/logo smg.png", use_column_width=True)
         else:
-            st.write("**UNISMG**")
+            st.markdown("<h3 style='text-align: center;'>UNISMG</h3>", unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
         
         # Botão com estilo condicional
         is_selected = st.session_state.get('ies_selecionada') == 'UNISMG'
         btn_smg = st.button(
-            "🎓 UNISMG" if not is_selected else "✅ UNISMG", 
+            "✅ SELECIONADA" if is_selected else "🎓 SELECIONAR", 
             use_container_width=True, 
             type="primary" if is_selected else "secondary",
             key="btn_smg"
@@ -406,6 +412,8 @@ def main():
         if btn_smg:
             st.session_state['ies_selecionada'] = 'UNISMG'
             st.rerun()
+    
+    st.markdown("###")  # Espaçamento
     
     # Mostrar IES selecionada
     if 'ies_selecionada' in st.session_state:
