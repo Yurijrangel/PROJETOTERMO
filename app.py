@@ -152,9 +152,9 @@ def gerar_termo_pdf_bytes(aluno_data, ies):
             # Obter proporção original da imagem
             aspect_ratio = logo.imageWidth / logo.imageHeight
             
-            # Definir tamanho máximo
-            max_width = 8*cm
-            max_height = 3.5*cm
+            # Definir tamanho máximo (aumentado)
+            max_width = 12*cm
+            max_height = 5*cm
             
             # Calcular dimensões mantendo proporção
             if aspect_ratio > (max_width / max_height):
@@ -344,12 +344,44 @@ def main():
     # Informações
     st.info("🎓 **Instituições suportadas:** UNIANDRADE | UNIB | UNISMG")
     
+    # ====== SELEÇÃO DE IES (ANTES DO UPLOAD) ======
+    st.subheader("1️⃣ Selecionar Instituição de Ensino (IES)")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.image("logos/logo uni.png", use_container_width=True) if os.path.exists("logos/logo uni.png") else None
+        btn_uniandrade = st.button("🎓 UNIANDRADE", use_container_width=True, type="primary" if st.session_state.get('ies_selecionada') == 'UNIANDRADE' else "secondary")
+        if btn_uniandrade:
+            st.session_state['ies_selecionada'] = 'UNIANDRADE'
+    
+    with col2:
+        st.image("logos/logo unib.png", use_container_width=True) if os.path.exists("logos/logo unib.png") else None
+        btn_unib = st.button("🎓 UNIB", use_container_width=True, type="primary" if st.session_state.get('ies_selecionada') == 'UNIB' else "secondary")
+        if btn_unib:
+            st.session_state['ies_selecionada'] = 'UNIB'
+    
+    with col3:
+        st.image("logos/logo smg.png", use_container_width=True) if os.path.exists("logos/logo smg.png") else None
+        btn_smg = st.button("🎓 UNISMG", use_container_width=True, type="primary" if st.session_state.get('ies_selecionada') == 'UNISMG' else "secondary")
+        if btn_smg:
+            st.session_state['ies_selecionada'] = 'UNISMG'
+    
+    # Mostrar IES selecionada
+    if 'ies_selecionada' in st.session_state:
+        st.success(f"✅ IES selecionada: **{st.session_state['ies_selecionada']}**")
+    else:
+        st.warning("⚠️ Selecione uma IES acima para continuar")
+        return
+    
+    st.markdown("---")
+    
     # Upload do arquivo
-    st.subheader("1️⃣ Fazer Upload da Planilha")
+    st.subheader("2️⃣ Fazer Upload da Planilha")
     uploaded_file = st.file_uploader(
         "Escolha um arquivo CSV ou Excel",
         type=['csv', 'xlsx', 'xls'],
-        help="A planilha deve conter as colunas: NOME, CPF, RUA, BAIRRO, CIDADE, UF, CURSO (e opcionalmente IES)"
+        help="A planilha deve conter as colunas: NOME, CPF, RUA, BAIRRO, CIDADE, UF, CURSO (e opcionalmente IES com códigos: 1=UNIANDRADE, 201=UNISMG, 301=UNIB)"
     )
     
     if uploaded_file is not None:
@@ -362,6 +394,25 @@ def main():
             
             # ✅ PADRONIZAR COLUNAS (SOLUÇÃO DO KEYERROR)
             df.columns = df.columns.str.strip().str.upper()
+            
+            # ✅ MAPEAR CÓDIGOS NUMÉRICOS PARA IES
+            if 'IES' in df.columns:
+                def mapear_ies(valor):
+                    """Mapeia códigos numéricos para nomes de IES"""
+                    valor_str = str(valor).strip()
+                    
+                    # Mapeamento de códigos
+                    if valor_str == '1':
+                        return 'UNIANDRADE'
+                    elif valor_str == '201':
+                        return 'UNISMG'
+                    elif valor_str == '301':
+                        return 'UNIB'
+                    else:
+                        # Se já for texto, converter para maiúsculo
+                        return valor_str.upper()
+                
+                df['IES'] = df['IES'].apply(mapear_ies)
             
             # Validar colunas necessárias
             colunas_necessarias = ['NOME', 'CPF', 'RUA', 'BAIRRO', 'CIDADE', 'UF', 'CURSO']
@@ -383,34 +434,14 @@ def main():
             
             st.markdown("---")
             
-            # Seleção de IES (se não houver coluna IES)
-            ies_padrao = None
+            # Seleção de IES (usar a selecionada no início)
+            ies_padrao = st.session_state['ies_selecionada']
             
             if not tem_coluna_ies:
-                st.subheader("2️⃣ Selecionar Instituição (IES)")
-                st.warning("⚠️ A planilha não possui coluna 'IES'. Selecione a instituição para todos os alunos:")
-                
-                opcao_ies = st.radio(
-                    "Escolha a IES:",
-                    options=[
-                        "UNIANDRADE - Centro Universitário Campos de Andrade",
-                        "UNIB - Universidade Ibirapuera",
-                        "UNISMG - Centro Universitário Santa Maria da Glória"
-                    ],
-                    index=0
-                )
-                
-                # Mapear opção para código da IES
-                if "UNIANDRADE" in opcao_ies:
-                    ies_padrao = "UNIANDRADE"
-                elif "UNIB" in opcao_ies:
-                    ies_padrao = "UNIB"
-                else:
-                    ies_padrao = "UNISMG"
-                
-                st.info(f"✓ IES selecionada: **{ies_padrao}**")
+                st.warning(f"⚠️ A planilha não possui coluna 'IES'. Será usada a IES selecionada: **{ies_padrao}**")
             else:
                 st.success("✅ Planilha contém coluna 'IES' - usando IES individual para cada aluno")
+                st.info("💡 **Códigos aceitos:** 1 = UNIANDRADE | 201 = UNISMG | 301 = UNIB")
                 
                 # Mostrar distribuição de IES
                 with st.expander("📊 Distribuição por IES"):
