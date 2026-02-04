@@ -25,17 +25,17 @@ IES_CONFIG = {
     'UNIANDRADE': {
         'nome_completo': 'Centro Universitário Campos de Andrade – UNIANDRADE',
         'sigla': 'UNIANDRADE',
-        'logo': 'logos/logo uni.png'
+        'logo': 'logos/logo_uni.png'
     },
     'UNIB': {
         'nome_completo': 'Universidade Ibirapuera - UNIB',
         'sigla': 'UNIB',
-        'logo': 'logos/logo unib.png'
+        'logo': 'logos/logo_unib.png'
     },
     'UNISMG': {
         'nome_completo': 'Centro Universitário Santa Maria da Glória - UNISMG',
         'sigla': 'UNISMG',
-        'logo': 'logos/logo smg.png'
+        'logo': 'logos/logo_smg.png'
     }
 }
 
@@ -171,8 +171,15 @@ def gerar_termo_pdf_bytes(aluno_data, ies):
             story.append(logo)
             story.append(Spacer(1, 0.5*cm))
         except Exception as e:
-            # Se houver erro ao carregar logo, continua sem ele
-            pass
+            # Se houver erro ao carregar logo, adiciona nome da IES
+            nome_ies = Paragraph(f"<b>{ies_info['nome_completo']}</b>", style_titulo)
+            story.append(nome_ies)
+            story.append(Spacer(1, 0.5*cm))
+    else:
+        # Se logo não existe, adiciona nome da IES
+        nome_ies = Paragraph(f"<b>{ies_info['nome_completo']}</b>", style_titulo)
+        story.append(nome_ies)
+        story.append(Spacer(1, 0.5*cm))
     
     # Título
     titulo = Paragraph("TERMO DE RESPONSABILIDADE DE ENTREGA DE DOCUMENTOS", style_titulo)
